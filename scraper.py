@@ -194,11 +194,12 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
             headless=True,
             args=[
                 "--no-sandbox",
-                "--disable-dev-shm-usage",       # server pe /dev/shm chhota hota hai
+                "--disable-dev-shm-usage",
                 "--disable-gpu",
                 "--disable-setuid-sandbox",
-                "--single-process",
                 "--disable-blink-features=AutomationControlled",
+                "--disable-extensions",
+                "--disable-infobars",
             ],
         )
         context = browser.new_context(
@@ -242,6 +243,7 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
         # ── 3. Scroll karke URLs collect karo ───────────────────────────────
         print(f"  📜 Scrolling to load results...")
         collected_urls: set[str] = set()
+        prev_count   = 0
         stale_rounds = 0
 
         for attempt in range(40):
@@ -260,7 +262,6 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
                 try:
                     href = lnk.get_attribute("href", timeout=500)
                     if href:
-                        # Sirf base URL raho (query params hata do)
                         base = href.split("?")[0]
                         collected_urls.add(base)
                 except Exception:
@@ -273,13 +274,16 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
                 print()
                 break
 
-            if cur == len(collected_urls) - 0:  # no new URLs
+            # BUG FIX: prev_count se compare karo, collected_urls se nahi
+            if cur == prev_count:
                 stale_rounds += 1
                 if stale_rounds >= 4:
                     print(f"\n  ℹ️  {cur} results mil gayi — aur nahi hain")
                     break
             else:
                 stale_rounds = 0
+
+            prev_count = cur
 
         print()
 

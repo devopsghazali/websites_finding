@@ -139,7 +139,7 @@ def stream(search_id: str):
     def generate():
         while True:
             try:
-                event = q.get(timeout=30)
+                event = q.get(timeout=8)   # 8s pe keepalive — port-forward drop na ho
                 if event is None:
                     yield f"data: {json.dumps({'type':'end'})}\n\n"
                     break
