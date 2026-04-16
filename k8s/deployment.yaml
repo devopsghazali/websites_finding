@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lead-gen-tool
+  labels:
+    app: lead-gen-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lead-gen-tool
+  template:
+    metadata:
+      labels:
+        app: lead-gen-tool
+    spec:
+      containers:
+        - name: lead-gen-tool
+          image: devopsghazali/websites_finding:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: SENDER_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: lead-gen-secrets
+                  key: SENDER_EMAIL
+            - name: SENDER_APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lead-gen-secrets
+                  key: SENDER_APP_PASSWORD
+            - name: SENDER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: lead-gen-secrets
+                  key: SENDER_NAME
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: lead-gen-secrets
+                  key: ANTHROPIC_API_KEY
+                  optional: true
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
