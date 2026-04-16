@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Lead Generator Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .topic-btn{transition:background .12s,color .12s}
+  .topic-btn:hover{background:rgba(255,255,255,.08)}
+  .topic-btn.active{background:rgba(37,211,102,.2);color:#25d366}
+  .step-icon{transition:background .25s,color .25s}
+  #live-log{font-family:'Courier New',monospace}
+  .lead-row:hover td{background:#f8fafc}
+  .wa-btn{background:#25d366;transition:background .15s}
+  .wa-btn:hover{background:#1ebe5d}
+  .sent-badge{background:#d1fae5;color:#065f46}
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:4px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spin{animation:spin .8s linear infinite}
+  /* verify icon buttons */
+  .vbtn{opacity:.5;transition:opacity .12s,transform .12s}
+  .vbtn:hover{opacity:1;transform:scale(1.2)}
+  /* contacted row */
+  .contacted-row td{background:#fffbeb !important}
+  /* recently searched chip */
+  .chip{background:#1e293b;color:#94a3b8;border-radius:9999px;padding:2px 10px;font-size:11px;cursor:pointer;transition:background .12s}
+  .chip:hover{background:#334155;color:#e2e8f0}
+</style>
+</head>
+<body class="bg-slate-100 flex h-screen overflow-hidden text-gray-800">
+
+<!-- ══════════════════════════════════════════════
+     SIDEBAR  (dark, scrollable)
+══════════════════════════════════════════════ -->
+<aside class="w-56 bg-[#0f172a] text-gray-300 flex flex-col flex-shrink-0 overflow-hidden">
+
+  <div class="px-4 py-3 border-b border-white/10 flex-shrink-0">
+    <p class="text-white font-bold text-sm leading-tight">Lead Generator Pro</p>
+    <p class="text-[10px] text-gray-500 mt-0.5">No website = Hot Lead 🔥</p>
+  </div>
+
+  <div class="flex-1 overflow-y-auto py-2 px-1.5 space-y-3">
+
+    <!-- ─── Food & Dining ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">🍽️ Food & Dining</p>
+      <button onclick="T(this,'Restaurants')"              class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Restaurants</button>
+      <button onclick="T(this,'South Indian Restaurants')" class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">South Indian</button>
+      <button onclick="T(this,'Chinese Restaurants')"      class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Chinese Restaurants</button>
+      <button onclick="T(this,'Biryani Shops')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Biryani Shops</button>
+      <button onclick="T(this,'Pizza & Fast Food')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Pizza & Fast Food</button>
+      <button onclick="T(this,'Dhabas')"                   class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Dhabas</button>
+      <button onclick="T(this,'Cafes')"                    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Cafes & Coffee Shops</button>
+      <button onclick="T(this,'Bakeries')"                 class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Bakeries & Cake Shops</button>
+      <button onclick="T(this,'Sweet Shops')"              class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Sweet Shops (Mithai)</button>
+      <button onclick="T(this,'Juice Centers')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Juice Centers</button>
+      <button onclick="T(this,'Ice Cream Parlours')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Ice Cream Parlours</button>
+      <button onclick="T(this,'Tiffin Services')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Tiffin Services</button>
+      <button onclick="T(this,'Catering Services')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Catering Services</button>
+    </div>
+
+    <!-- ─── Beauty & Wellness ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">💇 Beauty & Wellness</p>
+      <button onclick="T(this,'Gents Hair Salons')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Gents Hair Salons</button>
+      <button onclick="T(this,'Ladies Beauty Parlours')"   class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Ladies Beauty Parlours</button>
+      <button onclick="T(this,'Unisex Salons')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Unisex Salons</button>
+      <button onclick="T(this,'Spas')"                     class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Spas & Body Massage</button>
+      <button onclick="T(this,'Nail Salons')"              class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Nail Salons & Nail Art</button>
+      <button onclick="T(this,'Gyms')"                     class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Gyms & Fitness Centers</button>
+      <button onclick="T(this,'Yoga Studios')"             class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Yoga & Meditation</button>
+      <button onclick="T(this,'Mehendi Artists')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Mehendi Artists</button>
+      <button onclick="T(this,'Tattoo Studios')"           class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Tattoo Studios</button>
+      <button onclick="T(this,'Skin Care Clinics')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Skin Care Clinics</button>
+    </div>
+
+    <!-- ─── Healthcare ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">🏥 Healthcare</p>
+      <button onclick="T(this,'General Physicians')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">General Physicians</button>
+      <button onclick="T(this,'Dental Clinics')"           class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Dental Clinics</button>
+      <button onclick="T(this,'Eye Clinics')"              class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Eye Clinics</button>
+      <button onclick="T(this,'Dermatologists')"           class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Skin Clinics (Derma)</button>
+      <button onclick="T(this,'Orthopedic Clinics')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Orthopedic Clinics</button>
+      <button onclick="T(this,'Ayurvedic Clinics')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Ayurvedic Clinics</button>
+      <button onclick="T(this,'Homeopathic Clinics')"      class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Homeopathic Clinics</button>
+      <button onclick="T(this,'Blood Test Labs')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Diagnostic Labs</button>
+      <button onclick="T(this,'Pharmacies')"               class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Pharmacies</button>
+      <button onclick="T(this,'Physiotherapy')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Physiotherapy</button>
+      <button onclick="T(this,'Nursing Homes')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Nursing Homes</button>
+    </div>
+
+    <!-- ─── Home Services ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">🔧 Home Services</p>
+      <button onclick="T(this,'Electricians')"             class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Electricians</button>
+      <button onclick="T(this,'Plumbers')"                 class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Plumbers</button>
+      <button onclick="T(this,'AC Repair')"                class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">AC & Fridge Repair</button>
+      <button onclick="T(this,'Painters')"                 class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Painters (House)</button>
+      <button onclick="T(this,'Carpenters')"               class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Carpenters</button>
+      <button onclick="T(this,'Interior Designers')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Interior Designers</button>
+      <button onclick="T(this,'Pest Control')"             class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Pest Control</button>
+      <button onclick="T(this,'CCTV Installation')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">CCTV Installation</button>
+      <button onclick="T(this,'Cleaning Services')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Cleaning Services</button>
+      <button onclick="T(this,'Water Purifier Repair')"    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Water Purifier Repair</button>
+      <button onclick="T(this,'Laundry & Dry Cleaning')"   class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Laundry / Dry Cleaning</button>
+    </div>
+
+    <!-- ─── Automotive ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">🚗 Automotive</p>
+      <button onclick="T(this,'Car Service Centers')"      class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Car Service Centers</button>
+      <button onclick="T(this,'Bike Repair Shops')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Bike / Two-Wheeler Repair</button>
+      <button onclick="T(this,'Car Wash')"                 class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Car Wash & Detailing</button>
+      <button onclick="T(this,'Tyre Shops')"               class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Tyre Shops</button>
+      <button onclick="T(this,'Car Denting Painting')"     class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Denting & Painting</button>
+      <button onclick="T(this,'Car Accessories Shops')"    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Car Accessories</button>
+    </div>
+
+    <!-- ─── Education ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">📚 Education</p>
+      <button onclick="T(this,'IIT JEE Coaching')"         class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">IIT / JEE Coaching</button>
+      <button onclick="T(this,'NEET Coaching')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">NEET Coaching</button>
+      <button onclick="T(this,'Tuition Classes')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">School Tuition Classes</button>
+      <button onclick="T(this,'Computer Training Institute')" class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Computer Institutes</button>
+      <button onclick="T(this,'English Speaking Course')"  class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">English Speaking</button>
+      <button onclick="T(this,'Play Schools')"             class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Play Schools / Pre-School</button>
+      <button onclick="T(this,'Music Classes')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Music Classes</button>
+      <button onclick="T(this,'Dance Academies')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Dance Academies</button>
+      <button onclick="T(this,'Drawing & Art Classes')"    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Drawing & Art Classes</button>
+      <button onclick="T(this,'Swimming Coaching')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Swimming Coaching</button>
+      <button onclick="T(this,'Driving Schools')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Driving Schools</button>
+    </div>
+
+    <!-- ─── Business Services ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">💼 Business Services</p>
+      <button onclick="T(this,'Real Estate Agents')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Real Estate Agents</button>
+      <button onclick="T(this,'Property Dealers')"         class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Property Dealers</button>
+      <button onclick="T(this,'Lawyers')"                  class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Lawyers & Advocates</button>
+      <button onclick="T(this,'Chartered Accountants')"    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Chartered Accountants</button>
+      <button onclick="T(this,'GST Tax Consultants')"      class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">GST & Tax Consultants</button>
+      <button onclick="T(this,'Insurance Agents')"         class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Insurance Agents</button>
+      <button onclick="T(this,'Packers and Movers')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Packers & Movers</button>
+      <button onclick="T(this,'Event Planners')"           class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Event Planners</button>
+      <button onclick="T(this,'Travel Agencies')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Travel Agencies</button>
+      <button onclick="T(this,'Printing Services')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Printing & Packaging</button>
+      <button onclick="T(this,'Security Services')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Security Services</button>
+    </div>
+
+    <!-- ─── Photography & Media ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">📷 Photography & Media</p>
+      <button onclick="T(this,'Wedding Photographers')"    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Wedding Photographers</button>
+      <button onclick="T(this,'Birthday Photographers')"   class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Birthday Photographers</button>
+      <button onclick="T(this,'Product Photography')"      class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Product Photography</button>
+      <button onclick="T(this,'Videographers')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Videographers</button>
+      <button onclick="T(this,'Digital Marketing Agency')" class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Digital Marketing</button>
+      <button onclick="T(this,'Graphic Design Studio')"    class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Graphic Design Studios</button>
+    </div>
+
+    <!-- ─── Retail ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">🛍️ Retail</p>
+      <button onclick="T(this,'Clothing Boutiques')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Clothing Boutiques</button>
+      <button onclick="T(this,'Saree Shops')"              class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Saree & Lehenga Shops</button>
+      <button onclick="T(this,'Mens Readymade Shops')"     class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Men's Readymade Shops</button>
+      <button onclick="T(this,'Jewellers')"                class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Jewellers</button>
+      <button onclick="T(this,'Mobile Phone Shops')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Mobile Phone Shops</button>
+      <button onclick="T(this,'Mobile Repair Shops')"      class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Mobile Repair Centers</button>
+      <button onclick="T(this,'Electronics Shops')"        class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Electronics Shops</button>
+      <button onclick="T(this,'Furniture Shops')"          class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Furniture Shops</button>
+      <button onclick="T(this,'Shoe Shops')"               class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Shoe Shops</button>
+      <button onclick="T(this,'Toy Shops')"                class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Toy Shops</button>
+      <button onclick="T(this,'Gift Shops')"               class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Gift & Flower Shops</button>
+      <button onclick="T(this,'Stationery Shops')"         class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Stationery Shops</button>
+      <button onclick="T(this,'Optical Stores')"           class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Optical Stores</button>
+      <button onclick="T(this,'Sports Goods Shops')"       class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Sports Goods</button>
+      <button onclick="T(this,'Kirana Stores')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Kirana / Grocery Stores</button>
+    </div>
+
+    <!-- ─── Hospitality ─── -->
+    <div>
+      <p class="px-2 text-[9px] font-bold tracking-widest text-gray-500 uppercase mb-0.5">🏨 Hospitality</p>
+      <button onclick="T(this,'Hotels')"                   class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Hotels & Lodges</button>
+      <button onclick="T(this,'Guest Houses')"             class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Guest Houses & Homestays</button>
+      <button onclick="T(this,'Banquet Halls')"            class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Banquet / Marriage Halls</button>
+      <button onclick="T(this,'Party Halls')"              class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Party & Birthday Venues</button>
+      <button onclick="T(this,'Tent Decoration Services')" class="topic-btn w-full text-left px-2 py-1 rounded text-[11px]">Tent & Decoration</button>
+    </div>
+
+  </div><!-- end scroll -->
+</aside>
+
+<!-- ══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════ -->
+<main class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- ── Search bar ── -->
+  <header class="bg-white border-b border-gray-200 px-5 py-3 flex-shrink-0">
+    <div class="flex items-end gap-2">
+      <div class="flex-1">
+        <label class="block text-[10px] text-gray-400 mb-1 font-medium uppercase tracking-wide">Business Type</label>
+        <input id="topic-input" type="text"
+          placeholder="e.g. Hair Salons, Biryani Shops…"
+          onkeydown="if(event.key==='Enter')go()"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+      </div>
+      <div class="w-44">
+        <label class="block text-[10px] text-gray-400 mb-1 font-medium uppercase tracking-wide">City</label>
+        <input id="city-input" type="text" list="clist"
+          placeholder="Delhi, Mumbai…"
+          onkeydown="if(event.key==='Enter')go()"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+        <datalist id="clist">
+          <!-- North India -->
+          <option>Delhi</option><option>Noida</option><option>Gurgaon</option>
+          <option>Faridabad</option><option>Ghaziabad</option><option>Meerut</option>
+          <option>Agra</option><option>Lucknow</option><option>Kanpur</option>
+          <option>Varanasi</option><option>Prayagraj</option><option>Aligarh</option>
+          <option>Bareilly</option><option>Moradabad</option><option>Gorakhpur</option>
+          <option>Chandigarh</option><option>Ludhiana</option><option>Amritsar</option>
+          <option>Jalandhar</option><option>Patiala</option><option>Dehradun</option>
+          <option>Haridwar</option><option>Rishikesh</option>
+          <option>Jaipur</option><option>Jodhpur</option><option>Kota</option>
+          <option>Udaipur</option><option>Ajmer</option><option>Bikaner</option>
+          <option>Patna</option><option>Gaya</option><option>Muzaffarpur</option>
+          <option>Ranchi</option><option>Jamshedpur</option><option>Dhanbad</option>
+          <!-- West India -->
+          <option>Mumbai</option><option>Pune</option><option>Nagpur</option>
+          <option>Nashik</option><option>Aurangabad</option><option>Kolhapur</option>
+          <option>Surat</option><option>Ahmedabad</option><option>Vadodara</option>
+          <option>Rajkot</option><option>Gandhinagar</option><option>Bhavnagar</option>
+          <option>Indore</option><option>Bhopal</option><option>Jabalpur</option><option>Gwalior</option>
+          <!-- East India -->
+          <option>Kolkata</option><option>Bhubaneswar</option><option>Cuttack</option>
+          <option>Guwahati</option><option>Siliguri</option><option>Asansol</option>
+          <!-- South India -->
+          <option>Bangalore</option><option>Hyderabad</option><option>Chennai</option>
+          <option>Kochi</option><option>Coimbatore</option><option>Madurai</option>
+          <option>Vijayawada</option><option>Visakhapatnam</option><option>Mysore</option>
+          <option>Mangalore</option><option>Thiruvananthapuram</option>
+          <option>Kozhikode</option><option>Trichy</option><option>Salem</option>
+          <option>Warangal</option><option>Tirupati</option>
+        </datalist>
+      </div>
+      <!-- Max results -->
+      <div class="w-24">
+        <label class="block text-[10px] text-gray-400 mb-1 font-medium uppercase tracking-wide">Max Results</label>
+        <select id="max-results" class="w-full border border-gray-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:border-blue-500 bg-white">
+          <option value="20">20</option>
+          <option value="40">40</option>
+          <option value="60" selected>60</option>
+          <option value="80">80</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+
+      <button id="search-btn" onclick="go()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>Search
+      </button>
+      <!-- CSV Export (visible after search) -->
+      <a id="export-btn" href="#" target="_blank"
+        class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>CSV
+      </a>
+    </div>
+
+    <!-- Recently searched chips -->
+    <div id="recent-bar" class="hidden mt-2 flex gap-1.5 flex-wrap">
+      <span class="text-[10px] text-gray-400 self-center">Recent:</span>
+    </div>
+  </header>
+
+  <!-- ── Body ── -->
+  <div class="flex-1 overflow-y-auto p-4 space-y-3">
+
+    <!-- Progress card -->
+    <div id="prog-card" class="hidden bg-white rounded-xl border border-gray-200 p-4">
+      <!-- Steps -->
+      <div class="flex items-center mb-4">
+        <div class="flex flex-col items-center w-24">
+          <div id="si1" class="step-icon w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200 text-gray-400">1</div>
+          <p id="sl1" class="text-[10px] text-gray-400 mt-1 text-center leading-tight">Google Maps</p>
+        </div>
+        <div id="c12" class="flex-1 h-0.5 bg-gray-200 mb-4"></div>
+        <div class="flex flex-col items-center w-24">
+          <div id="si2" class="step-icon w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200 text-gray-400">2</div>
+          <p id="sl2" class="text-[10px] text-gray-400 mt-1 text-center leading-tight">Fetch Details</p>
+        </div>
+        <div id="c23" class="flex-1 h-0.5 bg-gray-200 mb-4"></div>
+        <div class="flex flex-col items-center w-24">
+          <div id="si3" class="step-icon w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200 text-gray-400">3</div>
+          <p id="sl3" class="text-[10px] text-gray-400 mt-1 text-center leading-tight">Filter Leads</p>
+        </div>
+      </div>
+      <!-- Log -->
+      <div id="live-log"
+        class="bg-gray-950 rounded-lg p-3 h-32 overflow-y-auto text-[11px] leading-5 space-y-0.5">
+        <span class="text-gray-600">Searching…</span>
+      </div>
+    </div>
+
+    <!-- Summary stats -->
+    <div id="stats-row" class="hidden grid grid-cols-4 gap-3">
+      <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-center">
+        <p id="st-hot"  class="text-2xl font-bold text-red-600">0</p>
+        <p class="text-[11px] text-red-400 mt-0.5">🔥 HOT Leads</p>
+      </div>
+      <div class="bg-orange-50 border border-orange-200 rounded-xl p-3 text-center">
+        <p id="st-warm" class="text-2xl font-bold text-orange-500">0</p>
+        <p class="text-[11px] text-orange-400 mt-0.5">🌤️ WARM Leads</p>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
+        <p id="st-prev" class="text-2xl font-bold text-amber-600">0</p>
+        <p class="text-[11px] text-amber-500 mt-0.5">✅ Already Sent</p>
+      </div>
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+        <p id="st-tot"  class="text-2xl font-bold text-slate-500">0</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">📊 Total Found</p>
+      </div>
+    </div>
+
+    <!-- HOT table -->
+    <div id="hot-sec" class="hidden bg-white rounded-xl border border-red-100 overflow-hidden">
+      <div class="px-5 py-2.5 bg-red-50 border-b border-red-100 flex items-center justify-between">
+        <div>
+          <h2 class="font-semibold text-red-700 text-sm">🔥 HOT Leads — No Website</h2>
+          <p class="text-[10px] text-red-300">Best targets — abhi tak koi website nahi</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="findAllEmails('hot')"
+            class="text-[10px] bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-0.5 rounded font-medium transition-colors">
+            🔍 Find All Emails
+          </button>
+          <button onclick="sendAllEmails('hot')"
+            class="text-[10px] bg-purple-100 hover:bg-purple-200 text-purple-700 px-2 py-0.5 rounded font-medium transition-colors">
+            📧 Send All Emails
+          </button>
+          <span id="hot-badge" class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead>
+            <tr class="border-b border-gray-100 text-[10px] text-gray-400 uppercase">
+              <th class="px-4 py-2 text-left w-6">#</th>
+              <th class="px-4 py-2 text-left">Business</th>
+              <th class="px-4 py-2 text-left">Phone</th>
+              <th class="px-4 py-2 text-left">Email</th>
+              <th class="px-4 py-2 text-left">Reason</th>
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="hot-body" class="divide-y divide-gray-50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- WARM table -->
+    <div id="warm-sec" class="hidden bg-white rounded-xl border border-orange-100 overflow-hidden">
+      <div class="px-5 py-2.5 bg-orange-50 border-b border-orange-100 flex items-center justify-between">
+        <div>
+          <h2 class="font-semibold text-orange-700 text-sm">🌤️ WARM Leads — Weak Presence</h2>
+          <p class="text-[10px] text-orange-300">Website hai par bahut weak hai</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="findAllEmails('warm')"
+            class="text-[10px] bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-0.5 rounded font-medium transition-colors">
+            🔍 Find All Emails
+          </button>
+          <button onclick="sendAllEmails('warm')"
+            class="text-[10px] bg-purple-100 hover:bg-purple-200 text-purple-700 px-2 py-0.5 rounded font-medium transition-colors">
+            📧 Send All Emails
+          </button>
+          <span id="warm-badge" class="bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead>
+            <tr class="border-b border-gray-100 text-[10px] text-gray-400 uppercase">
+              <th class="px-4 py-2 text-left w-6">#</th>
+              <th class="px-4 py-2 text-left">Business</th>
+              <th class="px-4 py-2 text-left">Phone</th>
+              <th class="px-4 py-2 text-left">Email</th>
+              <th class="px-4 py-2 text-left">Reason</th>
+              <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="warm-body" class="divide-y divide-gray-50"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty" class="flex flex-col items-center justify-center py-20 text-center">
+      <div class="text-5xl mb-3">🎯</div>
+      <h2 class="text-base font-semibold text-gray-400">Ready to Find Leads!</h2>
+      <p class="text-xs text-gray-400 mt-1.5">Sidebar se topic choose karo → City → Search</p>
+    </div>
+
+  </div><!-- /body -->
+</main>
+
+<!-- ══════════════════════════════════════════════  JS ══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+let es=null, hotN=0, warmN=0, prevN=0, curSearchId=null;
+
+// ── Sidebar topic ─────────────────────────────────────────────────────────────
+function T(btn, topic) {
+  document.getElementById('topic-input').value = topic;
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const c = document.getElementById('city-input');
+  if (!c.value) c.focus();
+}
+
+// ── Start search ──────────────────────────────────────────────────────────────
+async function go() {
+  const topic = document.getElementById('topic-input').value.trim();
+  const city  = document.getElementById('city-input').value.trim();
+  if (!topic) { alert('Topic daalo!'); return; }
+  if (!city)  { alert('City daalo!');  return; }
+
+  if (es) { es.close(); es = null; }
+  resetUI();
+  setBusy(true);
+  saveRecent(topic, city);
+
+  try {
+    const r = await fetch('/search', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({topic, city, max_results: +document.getElementById('max-results').value})
+    });
+    const d = await r.json();
+    if (d.error) { log(d.error,'#f87171'); setBusy(false); return; }
+    curSearchId = d.search_id;
+
+    es = new EventSource(`/stream/${d.search_id}`);
+    es.onmessage = e => handle(JSON.parse(e.data));
+    es.onerror   = () => { log('Connection lost.','#f87171'); setBusy(false); };
+  } catch(e) { log(String(e),'#f87171'); setBusy(false); }
+}
+
+// ── Handle SSE events ─────────────────────────────────────────────────────────
+function handle(ev) {
+  switch(ev.type) {
+    case 'step':
+      setStep(ev.step,'active',ev.message);
+      for(let i=1;i<ev.step;i++) setStep(i,'done');
+      log('▶ '+ev.message,'#60a5fa');
+      break;
+    case 'found':
+      log(`✅ ${ev.total} businesses mili`,'#34d399');
+      break;
+    case 'processing': {
+      const ws = ev.has_website ? '🌐' : '🚫';
+      const ph = ev.has_phone   ? '📞' : '  ';
+      log(`  [${ev.current}/${ev.total}] ${ws}${ph} ${ev.name}`,
+          ev.has_website ? '#6b7280' : '#fbbf24');
+      setStep(2,'active',`Fetching ${ev.current}/${ev.total}…`);
+      break;
+    }
+    case 'lead':
+      addRow(ev.lead, ev.lead_type);
+      break;
+    case 'done':
+      [1,2,3].forEach(i=>setStep(i,'done'));
+      showStats(ev.summary);
+      log(`✅ Done! HOT:${ev.summary.hot} WARM:${ev.summary.warm} Prev:${ev.summary.already_contacted}`,'#34d399');
+      setBusy(false);
+      if(es){es.close();es=null;}
+      if(curSearchId) {
+        const eb = document.getElementById('export-btn');
+        eb.href = `/export/${curSearchId}`;
+        eb.classList.remove('hidden');
+      }
+      break;
+    case 'error':
+      log('❌ '+ev.message,'#f87171');
+      setBusy(false);
+      break;
+  }
+}
+
+// ── Add row ───────────────────────────────────────────────────────────────────
+function addRow(lead, type) {
+  const isHot = type === 'HOT';
+  const tbody  = document.getElementById(isHot ? 'hot-body'  : 'warm-body');
+  const sec    = document.getElementById(isHot ? 'hot-sec'   : 'warm-sec');
+  const badge  = document.getElementById(isHot ? 'hot-badge' : 'warm-badge');
+  const prev   = lead.previously_contacted;
+
+  sec.classList.remove('hidden');
+  document.getElementById('empty').classList.add('hidden');
+
+  if (!prev) { if(isHot) hotN++; else warmN++; }
+  else        { prevN++; }
+  badge.textContent = isHot ? hotN : warmN;
+
+  const n      = isHot ? hotN : warmN;
+  const waPhone= lead._wa_phone || '';
+  const waMsg  = encodeURIComponent(
+    `Namaste! Main web design services deta hoon. Aapke business "${lead.name}" ke liye ek ` +
+    `professional website bana sakta hoon jo aapke customers ko aasani se dhundh sake. ` +
+    `Kya hum ek baar baat kar sakte hain?`
+  );
+  const waLink = waPhone ? `https://wa.me/${waPhone}?text=${waMsg}` : '';
+
+  // Verify links
+  const q     = encodeURIComponent(`${lead.name} ${lead.city}`);
+  const gLink = `https://www.google.com/search?q=${q}`;
+  const mLink = lead.google_maps_url || `https://www.google.com/maps/search/${q}`;
+  const fLink = `https://www.facebook.com/search/top/?q=${encodeURIComponent(lead.name)}`;
+
+  const addr   = lead.address ? h(lead.address).slice(0,50)+(lead.address.length>50?'…':'') : '—';
+  const color  = isHot ? 'red' : 'orange';
+  const rowCls = prev ? 'lead-row contacted-row' : 'lead-row';
+  const rowId  = `row-${(lead._wa_phone||lead.name||'x').replace(/\s/g,'').slice(0,12)}-${Date.now()}`;
+  const leadJson = escAttr(JSON.stringify(lead));
+
+  // ── WA action ────────────────────────────────────────────────────────────
+  let waAction;
+  if (prev) {
+    waAction = `<span class="sent-badge inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium">
+        ✅ Sent${lead.contacted_at?' '+lead.contacted_at.slice(0,10):''}
+      </span>
+      ${waLink?`<a href="${waLink}" target="_blank" onclick="trackWA(this,event)"
+          data-lead='${leadJson}' data-row="${rowId}"
+          class="wa-btn inline-flex items-center gap-1 text-white text-[10px] px-2 py-0.5 rounded-full mt-0.5">↩ Again</a>`:''}`;
+  } else if (waLink) {
+    waAction = `<a id="${rowId}" href="${waLink}" target="_blank"
+        onclick="trackWA(this,event)"
+        data-lead='${leadJson}' data-row="${rowId}"
+        class="wa-btn inline-flex items-center gap-1.5 text-white text-[11px] px-2.5 py-1.5 rounded-lg font-medium">
+        ${waIcon()} WA
+      </a>`;
+  } else {
+    waAction = `<span class="text-gray-300 text-[10px]">No phone</span>`;
+  }
+
+  const tr = document.createElement('tr');
+  tr.className = rowCls;
+  tr.id = `tr-${rowId}`;
+  // Store lead data on row for bulk email
+  tr.dataset.lead     = JSON.stringify(lead);
+  tr.dataset.leadType = type;
+
+  tr.innerHTML = `
+    <td class="px-4 py-3 text-gray-300 text-[10px]">${prev ? '—' : n}</td>
+    <td class="px-4 py-3 max-w-[180px]">
+      <p class="font-medium text-gray-800 text-xs leading-tight">${h(lead.name)}</p>
+      <p class="text-[10px] text-gray-400 mt-0.5 truncate">${addr}</p>
+      <div class="flex gap-1.5 mt-1">
+        <a href="${gLink}" target="_blank" title="Google Search" class="vbtn text-sm">🔍</a>
+        <a href="${mLink}" target="_blank" title="Google Maps"   class="vbtn text-sm">📍</a>
+        <a href="${fLink}" target="_blank" title="Facebook"      class="vbtn text-sm">📘</a>
+        ${lead.website?`<a href="${h(lead.website)}" target="_blank" title="Website" class="vbtn text-sm">🌐</a>`:''}
+      </div>
+    </td>
+    <td class="px-4 py-3 text-gray-700 font-mono text-[10px]">
+      ${lead.phone?h(lead.phone)+'<button onclick="copyPhone(\''+h(lead.phone)+'\')" class="ml-1 text-gray-400 hover:text-gray-700">📋</button>':'<span class="text-gray-300">—</span>'}
+    </td>
+    <td class="px-4 py-3" id="email-cell-${rowId}">
+      <button onclick="findEmail(this,'${rowId}')"
+        data-lead='${leadJson}'
+        class="text-[10px] text-blue-500 hover:text-blue-700 underline">Find email</button>
+    </td>
+    <td class="px-4 py-3">
+      <span class="bg-${color}-50 text-${color}-600 text-[10px] px-1.5 py-0.5 rounded-full">
+        ${h(lead.reason||(isHot?'No website':'Weak presence'))}
+      </span>
+      ${prev?`<br><span class="bg-amber-100 text-amber-700 text-[10px] px-1.5 py-0.5 rounded-full mt-0.5 inline-block">⚠ Already Sent</span>`:''}
+    </td>
+    <td class="px-4 py-3">${waAction}</td>`;
+  tbody.appendChild(tr);
+}
+
+// ── WhatsApp click → track ────────────────────────────────────────────────────
+async function trackWA(el, event) {
+  // Don't block opening
+  const rowId = el.dataset.row;
+  let lead;
+  try { lead = JSON.parse(el.dataset.lead); } catch { return; }
+
+  // Change button to "Sent ✓" immediately
+  el.innerHTML = '✅ Sent!';
+  el.classList.remove('wa-btn');
+  el.classList.add('sent-badge');
+  el.style.pointerEvents = 'none';
+  el.removeAttribute('href');
+
+  // Save to tracker (fire & forget)
+  fetch('/track', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({lead, method:'whatsapp'})
+  }).catch(()=>{});
+
+  // Update stats
+  prevN++;
+  const statEl = document.getElementById('st-prev');
+  if(statEl) statEl.textContent = prevN;
+}
+
+// ── Progress steps ────────────────────────────────────────────────────────────
+const SPIN = `<svg class="w-3.5 h-3.5 spin" fill="none" viewBox="0 0 24 24">
+  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>`;
+const CHK  = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
+
+function setStep(n, st, lbl) {
+  const ic = document.getElementById(`si${n}`);
+  const lb = document.getElementById(`sl${n}`);
+  if(!ic) return;
+  if(st==='active') {
+    ic.className='step-icon w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white';
+    ic.innerHTML=SPIN;
+    const c=document.getElementById(n===1?'c12':'c23');
+    if(c) c.className='flex-1 h-0.5 bg-blue-300 mb-4';
+    if(lbl&&lb) lb.textContent=lbl;
+  } else if(st==='done') {
+    ic.className='step-icon w-8 h-8 rounded-full flex items-center justify-center bg-green-500 text-white';
+    ic.innerHTML=CHK;
+    const c=document.getElementById(n===1?'c12':'c23');
+    if(c) c.className='flex-1 h-0.5 bg-green-400 mb-4';
+  } else {
+    ic.className='step-icon w-8 h-8 rounded-full flex items-center justify-center bg-gray-200 text-gray-400 font-bold text-xs';
+    ic.textContent=n;
+  }
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+function showStats(s) {
+  const row = document.getElementById('stats-row');
+  row.style.display='grid'; row.classList.remove('hidden');
+  document.getElementById('st-hot').textContent  = s.hot   ||0;
+  document.getElementById('st-warm').textContent = s.warm  ||0;
+  document.getElementById('st-prev').textContent = s.already_contacted||0;
+  document.getElementById('st-tot').textContent  = s.total ||0;
+  prevN = s.already_contacted || 0;
+}
+
+// ── Log ───────────────────────────────────────────────────────────────────────
+function log(msg, color='#9ca3af') {
+  const el=document.getElementById('live-log');
+  const p=document.createElement('p');
+  p.style.color=color; p.textContent=msg;
+  el.appendChild(p); el.scrollTop=el.scrollHeight;
+}
+
+// ── Busy state ────────────────────────────────────────────────────────────────
+function setBusy(on) {
+  const btn=document.getElementById('search-btn');
+  if(on) {
+    btn.disabled=true;
+    btn.innerHTML=`${SPIN} Searching…`;
+    btn.className='bg-gray-400 cursor-not-allowed text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5';
+  } else {
+    btn.disabled=false;
+    btn.innerHTML=`<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>Search`;
+    btn.className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors';
+  }
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+function resetUI() {
+  hotN=0;warmN=0;prevN=0;curSearchId=null;
+  document.getElementById('prog-card').classList.remove('hidden');
+  document.getElementById('stats-row').style.display='none';
+  document.getElementById('stats-row').classList.add('hidden');
+  ['hot-sec','warm-sec','empty'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  ['hot-body','warm-body'].forEach(id=>document.getElementById(id).innerHTML='');
+  ['hot-badge','warm-badge'].forEach(id=>document.getElementById(id).textContent='0');
+  document.getElementById('live-log').innerHTML='<span class="text-gray-600">Searching…</span>';
+  document.getElementById('export-btn').classList.add('hidden');
+  ['c12','c23'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.className='flex-1 h-0.5 bg-gray-200 mb-4';
+  });
+  [1,2,3].forEach(i=>setStep(i,'pending'));
+  document.getElementById('empty').classList.remove('hidden');
+}
+
+// ── Recently searched (localStorage) ─────────────────────────────────────────
+function saveRecent(topic, city) {
+  let arr = JSON.parse(localStorage.getItem('lgRecent')||'[]');
+  const entry = `${topic} • ${city}`;
+  arr = [entry, ...arr.filter(x=>x!==entry)].slice(0,5);
+  localStorage.setItem('lgRecent', JSON.stringify(arr));
+  renderRecent();
+}
+
+function renderRecent() {
+  const arr = JSON.parse(localStorage.getItem('lgRecent')||'[]');
+  const bar = document.getElementById('recent-bar');
+  if(!arr.length){bar.classList.add('hidden');return;}
+  bar.classList.remove('hidden');
+  // clear old chips (keep label)
+  while(bar.children.length>1) bar.removeChild(bar.lastChild);
+  arr.forEach(entry=>{
+    const [t,c] = entry.split(' • ');
+    const chip = document.createElement('button');
+    chip.className='chip';
+    chip.textContent=entry;
+    chip.onclick=()=>{
+      document.getElementById('topic-input').value=t||'';
+      document.getElementById('city-input').value=c||'';
+      go();
+    };
+    bar.appendChild(chip);
+  });
+}
+
+// ── Email: find single ────────────────────────────────────────────────────────
+async function findEmail(btn, rowId) {
+  let lead;
+  try { lead = JSON.parse(btn.dataset.lead); } catch { return; }
+
+  const cell = document.getElementById(`email-cell-${rowId}`);
+  cell.innerHTML = `<span class="text-gray-400 text-[10px]">🔍 Searching…</span>`;
+
+  try {
+    const r = await fetch('/find-email', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({lead})
+    });
+    const d = await r.json();
+    if (d.emails && d.emails.length) {
+      const email = d.emails[0];
+      // Store email on the row for bulk send
+      const tr = cell.closest('tr');
+      if (tr) tr.dataset.email = email;
+      cell.innerHTML = `
+        <span class="font-mono text-[10px] text-green-700">${h(email)}</span>
+        <button onclick="copyPhone('${h(email)}')" class="ml-1 text-gray-400 hover:text-gray-700 text-[10px]">📋</button>
+        <button onclick="sendOneEmail('${h(email)}', this)"
+          data-lead='${escAttr(JSON.stringify(lead))}'
+          class="block mt-0.5 text-[10px] bg-purple-100 hover:bg-purple-200 text-purple-700 px-1.5 py-0.5 rounded transition-colors">
+          📧 Send Email
+        </button>`;
+    } else {
+      cell.innerHTML = `<span class="text-gray-400 text-[10px]">Not found</span>`;
+    }
+  } catch(e) {
+    cell.innerHTML = `<span class="text-red-400 text-[10px]">Error</span>`;
+  }
+}
+
+// ── Email: find ALL in a section ──────────────────────────────────────────────
+async function findAllEmails(section) {
+  const tbody = document.getElementById(section === 'hot' ? 'hot-body' : 'warm-body');
+  const rows  = Array.from(tbody.querySelectorAll('tr[data-lead]'));
+  for (const row of rows) {
+    const rowId = row.id.replace('tr-', '');
+    const cell  = document.getElementById(`email-cell-${rowId}`);
+    if (!cell) continue;
+    const btn = cell.querySelector('button[data-lead]');
+    if (!btn) continue;   // already found or already searching
+    await findEmail(btn, rowId);
+    await new Promise(r => setTimeout(r, 600));  // throttle
+  }
+}
+
+// ── Email: send one ───────────────────────────────────────────────────────────
+async function sendOneEmail(email, btn) {
+  let lead;
+  try { lead = JSON.parse(btn.dataset.lead); } catch { return; }
+
+  btn.textContent = '⏳ Sending…';
+  btn.disabled = true;
+
+  try {
+    const r = await fetch('/send-email', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({lead, email})
+    });
+    const d = await r.json();
+    if (d.ok) {
+      btn.textContent = '✅ Sent!';
+      btn.className   = 'block mt-0.5 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded';
+      toast('📧 Email sent to ' + email);
+    } else {
+      btn.textContent = '❌ Failed';
+      btn.className   = 'block mt-0.5 text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded cursor-pointer';
+      btn.disabled = false;
+      toast('Error: ' + (d.error || 'Unknown'), 'red');
+    }
+  } catch(e) {
+    btn.textContent = '❌ Error'; btn.disabled = false;
+  }
+}
+
+// ── Email: send ALL in a section ─────────────────────────────────────────────
+async function sendAllEmails(section) {
+  const tbody = document.getElementById(section === 'hot' ? 'hot-body' : 'warm-body');
+  const rows  = Array.from(tbody.querySelectorAll('tr[data-lead]'));
+  const items = [];
+
+  for (const row of rows) {
+    const email = row.dataset.email;
+    if (!email) continue;
+    let lead;
+    try { lead = JSON.parse(row.dataset.lead); } catch { continue; }
+    items.push({lead, email});
+  }
+
+  if (!items.length) {
+    toast('Pehle "Find All Emails" click karo!', 'orange');
+    return;
+  }
+
+  if (!confirm(`${items.length} businesses ko email bhejna hai. Confirm?`)) return;
+
+  try {
+    const r = await fetch('/send-bulk-emails', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({items})
+    });
+    const d = await r.json();
+    const sent = (d.results||[]).filter(x=>x.ok).length;
+    const fail = (d.results||[]).filter(x=>!x.ok).length;
+    toast(`✅ ${sent} emails sent${fail?' | ❌ '+fail+' failed':''}`, sent > 0 ? 'green' : 'red');
+  } catch(e) {
+    toast('Bulk send failed: ' + e.message, 'red');
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, color='green') {
+  const colors = {green:'bg-green-800', red:'bg-red-800', orange:'bg-orange-700'};
+  const t = document.createElement('div');
+  t.className = `fixed bottom-4 right-4 ${colors[color]||colors.green} text-white text-xs px-4 py-2 rounded-lg shadow-lg z-50 max-w-xs`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ── Copy phone ────────────────────────────────────────────────────────────────
+function copyPhone(phone) {
+  navigator.clipboard.writeText(phone).catch(()=>{});
+  // brief toast
+  const t=document.createElement('div');
+  t.className='fixed bottom-4 right-4 bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg shadow z-50';
+  t.textContent='📋 Phone copied!';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function h(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escAttr(s){return (s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;');}
+function waIcon(){return `<svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+</svg>`;}
+
+// On load: render recent searches
+document.addEventListener('DOMContentLoaded', renderRecent);
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# ─────────────────────────────────────────────────────────────
+# MESSAGE TEMPLATE FILE
+# Yahan apna message likhdo — tool automatically fill karega
+# ─────────────────────────────────────────────────────────────
+#
+# Available variables (curly brackets mein likhna hai):
+#   {name}         → Business ka naam  (e.g. "Hotel ABC")
+#   {topic}        → Category          (e.g. "restaurant")
+#   {city}         → City              (e.g. "Lucknow")
+#   {rating}       → Google rating     (e.g. "4.2")
+#   {reviews}      → Review count      (e.g. "12")
+#
+# ─────────────────────────────────────────────────────────────
+# TEMPLATE (sirf yeh part edit karo — # wali lines ignore hoti hain):
+# ─────────────────────────────────────────────────────────────
+
+Hi {name},
+
+I came across your {topic} on Google Maps in {city}.
+
+I noticed you don't have a website yet — I help local businesses
+get more customers with a simple, affordable online presence.
+
+Would you be open to a free 10-minute call?
+
+- Digital Growth Team
