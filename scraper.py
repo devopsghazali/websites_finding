@@ -17,28 +17,15 @@ except ImportError:
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _safe_text(page, selector: str, default: str = "") -> str:
-    """Safely ek element ka text lo."""
     try:
         el = page.locator(selector).first
-        el.wait_for(timeout=3000)
+        el.wait_for(timeout=4000)
         return el.inner_text().strip()
     except Exception:
         return default
 
 
-def _safe_attr(page, selector: str, attr: str, default: str = "") -> str:
-    """Safely ek element ka attribute lo."""
-    try:
-        el = page.locator(selector).first
-        el.wait_for(timeout=3000)
-        val = el.get_attribute(attr)
-        return val.strip() if val else default
-    except Exception:
-        return default
-
-
 def _extract_rating(text: str) -> float:
-    """'4.2 stars 150 reviews' ya '4.2' se rating nikalo."""
     m = re.search(r"(\d+\.?\d*)\s*star", text)
     if not m:
         m = re.search(r"(\d+\.?\d*)", text)
@@ -46,7 +33,6 @@ def _extract_rating(text: str) -> float:
 
 
 def _extract_review_count(text: str) -> int:
-    """'(1,234)' ya '1234 reviews' se count nikalo."""
     m = re.search(r"[\(,]?([\d,]+)[\),]?\s*(review|Rating)?", text)
     if m:
         return int(m.group(1).replace(",", ""))
@@ -56,16 +42,12 @@ def _extract_review_count(text: str) -> int:
 # ── Detail panel se data nikalo ───────────────────────────────────────────────
 
 def _parse_detail_panel(page) -> dict:
-    """
-    Jab koi business result open hota hai toh uska detail panel parse karo.
-    Google Maps ka UI change hota rehta hai, isliye multiple selectors try karte hain.
-    """
     details = {}
 
     # ── Name ──────────────────────────────────────────────────────────────────
     for sel in ["h1.DUwDvf", "h1", "[data-attrid='title']"]:
         try:
-            name = page.locator(sel).first.inner_text(timeout=4000).strip()
+            name = page.locator(sel).first.inner_text(timeout=5000).strip()
             if name:
                 details["name"] = name
                 break
@@ -75,7 +57,7 @@ def _parse_detail_panel(page) -> dict:
     # ── Rating & Reviews ──────────────────────────────────────────────────────
     try:
         rating_block = page.locator("div.F7nice").first
-        rating_block.wait_for(timeout=3000)
+        rating_block.wait_for(timeout=4000)
         rating_text = rating_block.inner_text()
         parts = rating_text.split()
         if parts:
@@ -89,7 +71,6 @@ def _parse_detail_panel(page) -> dict:
     except Exception:
         pass
 
-    # review count fallback
     if "total_reviews" not in details:
         try:
             rv = page.locator("button[jsaction*='review']").first.inner_text(timeout=2000)
@@ -97,10 +78,9 @@ def _parse_detail_panel(page) -> dict:
         except Exception:
             details["total_reviews"] = 0
 
-    # ── Website (multi-strategy — more reliable) ─────────────────────────────
-    # Domains jo website NAHI hain (directories, social, Google itself)
+    # ── Website ───────────────────────────────────────────────────────────────
     _NOT_WEBSITE = (
-        "google.", "goo.gl", "googleapis",           # ALL google domains
+        "google.", "goo.gl", "googleapis",
         "facebook.com", "instagram.com", "twitter.com", "x.com",
         "youtube.com", "wa.me", "t.me",
         "zomato.com", "swiggy.com", "dunzo.com",
@@ -114,7 +94,6 @@ def _parse_detail_panel(page) -> dict:
         href_low = href.lower()
         return not any(d in href_low for d in _NOT_WEBSITE)
 
-    # Strategy 1: Google Maps specific selectors (data-item-id is most reliable)
     for sel in [
         "a[data-item-id='authority']",
         "a[aria-label*='website' i]",
@@ -123,21 +102,20 @@ def _parse_detail_panel(page) -> dict:
         "a[jsaction*='openweb']",
     ]:
         try:
-            href = page.locator(sel).first.get_attribute("href", timeout=1500)
+            href = page.locator(sel).first.get_attribute("href", timeout=2000)
             if _is_real_website(href):
                 details["website"] = href
                 break
         except Exception:
             pass
 
-    # Strategy 2: Scan ALL anchor tags on page — pick first non-Google external link
     if "website" not in details:
         try:
-            page.wait_for_timeout(500)   # brief extra wait for lazy-loaded links
+            page.wait_for_timeout(500)
             all_anchors = page.locator("a[href]").all()
-            for anchor in all_anchors[:40]:   # scan first 40 links
+            for anchor in all_anchors[:40]:
                 try:
-                    href = anchor.get_attribute("href", timeout=200)
+                    href = anchor.get_attribute("href", timeout=300)
                     if _is_real_website(href):
                         details["website"] = href
                         break
@@ -160,7 +138,6 @@ def _parse_detail_panel(page) -> dict:
         except Exception:
             pass
 
-    # phone fallback: look for tel: links
     if "phone" not in details:
         try:
             tel = page.locator("a[href^='tel:']").first.get_attribute("href", timeout=2000)
@@ -183,7 +160,7 @@ def _parse_detail_panel(page) -> dict:
         except Exception:
             pass
 
-    # ── Photos count (approximate) ────────────────────────────────────────────
+    # ── Photos count ──────────────────────────────────────────────────────────
     try:
         photo_btn = page.locator("button[aria-label*='photo' i]").first
         ph_text = photo_btn.inner_text(timeout=2000)
@@ -195,19 +172,13 @@ def _parse_detail_panel(page) -> dict:
     return details
 
 
-# ── Main scraping functions ───────────────────────────────────────────────────
+# ── Main scraping function ────────────────────────────────────────────────────
 
 def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
     """
-    Google Maps scrape karke leads collect karo. No API key needed!
-
-    Args:
-        topic:             e.g. 'restaurants', 'salons', 'gyms'
-        city:              e.g. 'Lucknow', 'Delhi', 'Mumbai'
-        progress_callback: optional callable(dict) for UI progress events
-
-    Returns:
-        List of business dicts (same format as pehle wala API scraper)
+    Google Maps scrape karke leads collect karo.
+    FIX: Pehle saare URLs collect karo, phir har ek pe directly navigate karo.
+    Is tarah stale element timeout errors nahi aate.
     """
     def emit(event: dict):
         if progress_callback:
@@ -221,7 +192,14 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=True,
-            args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",       # server pe /dev/shm chhota hota hai
+                "--disable-gpu",
+                "--disable-setuid-sandbox",
+                "--single-process",
+                "--disable-blink-features=AutomationControlled",
+            ],
         )
         context = browser.new_context(
             user_agent=(
@@ -230,107 +208,92 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
                 "Chrome/124.0.0.0 Safari/537.36"
             ),
             locale="en-IN",
+            viewport={"width": 1280, "height": 900},
         )
         page = context.new_page()
 
         # ── 1. Google Maps search ────────────────────────────────────────────
         encoded = query.replace(" ", "+")
-        page.goto(
-            f"https://www.google.com/maps/search/{encoded}",
-            wait_until="domcontentloaded",
-            timeout=30000,
-        )
-        page.wait_for_timeout(3000)
+        search_url = f"https://www.google.com/maps/search/{encoded}"
 
-        # Consent screen dismiss karo (EU/India popup)
+        page.goto(search_url, wait_until="domcontentloaded", timeout=60000)
+        page.wait_for_timeout(4000)
+
+        # Consent/popup dismiss karo
         for btn_text in ["Accept all", "I agree", "Reject all"]:
             try:
                 btn = page.get_by_role("button", name=btn_text)
                 if btn.count() > 0:
                     btn.first.click()
-                    page.wait_for_timeout(1000)
+                    page.wait_for_timeout(1500)
                     break
             except Exception:
                 pass
 
-        # ── 2. Results feed dhundho ──────────────────────────────────────────
+        # ── 2. Results feed wait karo ────────────────────────────────────────
         feed_sel = 'div[role="feed"]'
         try:
-            page.wait_for_selector(feed_sel, timeout=10000)
+            page.wait_for_selector(feed_sel, timeout=15000)
         except PlaywrightTimeout:
-            print("⚠️  Results load nahi hue. Internet ya Google block check karo.")
+            print("⚠️  Results load nahi hue.")
             browser.close()
             return []
 
-        # ── 3. Smart scroll — tab tak chalo jab tak MAX_RESULTS na milein ────
-        print(f"  📜 Scrolling to load {MAX_RESULTS}+ results...")
+        # ── 3. Scroll karke URLs collect karo ───────────────────────────────
+        print(f"  📜 Scrolling to load results...")
+        collected_urls: set[str] = set()
+        stale_rounds = 0
 
-        def _count_unique_links() -> int:
-            links = page.locator(f'{feed_sel} a[href*="/maps/place/"]').all()
-            hrefs = set()
-            for lnk in links:
-                try:
-                    h = lnk.get_attribute("href")
-                    if h: hrefs.add(h)
-                except Exception:
-                    pass
-            return len(hrefs)
-
-        prev_count   = 0
-        stale_rounds = 0        # kitni baar count nahi badha
-
-        for attempt in range(30):          # max 30 scroll attempts (~120 results)
-            # Scroll to bottom of feed
+        for attempt in range(40):
+            # Feed scroll
             page.evaluate(
                 f"""
                 var el = document.querySelector('{feed_sel}');
-                if (el) el.scrollTop = el.scrollHeight + 5000;
+                if (el) el.scrollTop = el.scrollHeight + 9999;
                 """
             )
-            page.wait_for_timeout(1800)    # Google ko load hone do
+            page.wait_for_timeout(2000)
 
-            cur_count = _count_unique_links()
-            print(f"  ... scroll {attempt+1}: {cur_count} links", end="\r")
+            # Saare place links collect karo
+            links = page.locator(f'{feed_sel} a[href*="/maps/place/"]').all()
+            for lnk in links:
+                try:
+                    href = lnk.get_attribute("href", timeout=500)
+                    if href:
+                        # Sirf base URL raho (query params hata do)
+                        base = href.split("?")[0]
+                        collected_urls.add(base)
+                except Exception:
+                    pass
 
-            if cur_count >= MAX_RESULTS:
+            cur = len(collected_urls)
+            print(f"  ... scroll {attempt+1}: {cur} URLs collected", end="\r")
+
+            if cur >= MAX_RESULTS:
                 print()
-                break                      # enough results mil gayi
+                break
 
-            if cur_count == prev_count:
+            if cur == len(collected_urls) - 0:  # no new URLs
                 stale_rounds += 1
-                if stale_rounds >= 3:      # 3 baar count nahi badha = end of results
-                    print(f"\n  ℹ️  Google Maps ne sirf {cur_count} results diye is topic/city ke liye")
+                if stale_rounds >= 4:
+                    print(f"\n  ℹ️  {cur} results mil gayi — aur nahi hain")
                     break
             else:
                 stale_rounds = 0
 
-            prev_count = cur_count
-
         print()
 
-        # ── 4. Saare result links collect karo ──────────────────────────────
-        result_links = page.locator(f'{feed_sel} a[href*="/maps/place/"]').all()
-        seen_hrefs   = set()
-        unique_links = []
-        for link in result_links:
-            try:
-                href = link.get_attribute("href")
-                if href and href not in seen_hrefs:
-                    seen_hrefs.add(href)
-                    unique_links.append(link)
-            except Exception:
-                pass
-
-        total = min(len(unique_links), MAX_RESULTS)
-        print(f"  ✅ {len(unique_links)} businesses mili, processing {total}...")
+        # ── 4. Har URL pe directly navigate karo (stale element issue FIX) ──
+        url_list = list(collected_urls)[:MAX_RESULTS]
+        total = len(url_list)
+        print(f"  ✅ {total} business URLs collected, ab details le rahe hain...")
         emit({"type": "found", "total": total})
 
-        # ── 5. Har result pe click karke details lo ──────────────────────────
-        for i, link in enumerate(unique_links[:MAX_RESULTS], 1):
+        for i, place_url in enumerate(url_list, 1):
             try:
-                link.scroll_into_view_if_needed()
-                link.click()
-                page.wait_for_timeout(2500)   # panel load hone do
+                # Direct URL navigate — koi element hold nahi, no stale errors
+                page.goto(place_url, wait_until="domcontentloaded", timeout=45000)
+                page.wait_for_timeout(2500)
 
                 detail = _parse_detail_panel(page)
                 maps_url = page.url
@@ -363,28 +326,8 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
                     "has_phone": bool(lead["phone"]),
                 })
 
-                # Back button — sidebar wapas lao
-                try:
-                    back_btn = page.locator("button[aria-label='Back']").first
-                    back_btn.click(timeout=2000)
-                    page.wait_for_timeout(1000)
-                except Exception:
-                    # Back nahi mila toh same search URL pe wapas jao
-                    page.goto(
-                        f"https://www.google.com/maps/search/{encoded}",
-                        wait_until="domcontentloaded",
-                        timeout=20000,
-                    )
-                    page.wait_for_timeout(2000)
-                    # Re-scroll briefly
-                    for _ in range(3):
-                        page.evaluate(
-                            f"document.querySelector('{feed_sel}').scrollBy(0, 3000)"
-                        )
-                        page.wait_for_timeout(800)
-
             except Exception as e:
-                print(f"  [{i}] ⚠️  Skip (error: {e})")
+                print(f"  [{i}] ⚠️  Skip ({e})")
                 continue
 
         browser.close()
@@ -393,13 +336,11 @@ def collect_leads(topic: str, city: str, progress_callback=None) -> list[dict]:
     return leads
 
 
-# ── Backward-compat aliases (pehle wale code ke saath kaam kare) ──────────────
+# ── Backward-compat aliases ───────────────────────────────────────────────────
 
 def search_businesses(topic: str, city: str) -> list[dict]:
-    """collect_leads ka alias - pehle wale code ke saath compatible."""
     return collect_leads(topic, city)
 
 
 def get_place_details(place_id: str) -> dict:
-    """No-op stub - ab individual API calls nahi hoti."""
     return {}
